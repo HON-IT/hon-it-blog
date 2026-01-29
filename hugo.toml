@@ -1,0 +1,10 @@
+baseURL = 'https://blog.hon-it.be/'
+languageCode = 'nl-be'
+title = 'HON-IT | Wireless Engineering'
+theme = "PaperMod"
+
+[params]
+    author = " Nick Cuypers"
+    description = "CWNE Candidate - Wireless & Network Engineering Blog"
+    showCodeCopyButtons = true # Handig voor technische lezers!
+	mainSections = ["posts"]
