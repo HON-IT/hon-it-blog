@@ -1,8 +1,8 @@
 ---
 title: "Troubleshooting Roaming Issues with Packet Captures"
 date: 2026-01-29
-draft: false
-tags: ["Wi-Fi", "Troubleshooting", "Packet Capture", "CWNE"]
+draft: true
+author: "Nick Cuypers"
 ---
 
 ## The Case
