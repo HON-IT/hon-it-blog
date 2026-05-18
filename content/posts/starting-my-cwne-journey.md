@@ -36,7 +36,7 @@ This blog will mainly focus on wireless networking, but not only from a theoreti
 - RF design and validation
 - Troubleshooting methodology
 - Site surveys and planning
-- HPE Aruba Networking and Ruckus topics
+- Vendor-specific wireless topics, including Aruba, Ruckus, and other platforms
 - Automation and useful tooling
 - Certification notes and study experiences
 - Lessons learned from real projects
