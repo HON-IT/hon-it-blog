@@ -254,50 +254,38 @@ After that, the question becomes:
 
 To answer that, look at a few things:
 
-| Check | Why it matters |
-|---|---|
-| Supported bands | A 2.4 GHz-only device has very different design constraints than a 5 GHz or 6 GHz capable client. |
-| Supported standards | An older 802.11n client may behave very differently from a modern 802.11ax client. |
-| Antenna design | Small handheld or embedded devices often have weaker antennas than laptops. |
-| Client transmit power | A low-power client may hear the AP but may not be heard well by the AP. |
-| Roaming behavior | Some clients roam aggressively, while others stay connected too long. |
-| Application requirements | Voice, scanning, payment, and medical workflows may be more sensitive than basic web browsing. |
-| Real-world RSSI/SNR | Datasheets are useful, but actual measurements in the environment matter more. |
-| Retry rate and data rates | A client with acceptable RSSI may still perform poorly if retries are high or rates are low. |
+| Check                    | Why it matters                                                                                    |
+| ------------------------ | ------------------------------------------------------------------------------------------------- |
+| Supported bands          | A 2.4 GHz-only device has very different design constraints than a 5 GHz or 6 GHz capable client. |
+| Supported standards      | An older 802.11n client may behave very differently from a modern 802.11ax client.                |
+| Antenna design           | Small handheld or embedded devices often have weaker antennas than laptops.                       |
+| Client transmit power    | A low-power client may hear the AP but may not be heard well by the AP.                           |
+| Roaming behavior         | Some clients roam aggressively, while others stay connected too long.                             |
+| Application requirements | Voice, scanning, payment, and medical workflows may be more sensitive than basic web browsing.    |
 
 The best way to identify the LCMI device is to test real clients in real locations.
 
-For example, place a laptop, phone, scanner, or other business-critical device in the same location and compare:
+A simple practical method is to place each candidate device in the same test locations and record the same values for each one. For example, you could test a laptop, phone, scanner, or other business-critical device at a few repeatable distances from the AP, such as close range, mid-cell, and the expected cell edge.
+
+The exact distances are not the most important part. Testing at 3, 6, and 9 meters can be useful in a lab, but real environments are affected by walls, shelving, people, doors, device orientation, and antenna placement. The goal is repeatability.
+
+For each device, compare:
 
 * client-side RSSI,
 * AP/controller-side client RSSI,
 * SNR,
-* Tx/Rx rate,
-* retries,
+* Tx/Rx rate or MCS,
+* retry rate if available,
 * roaming behavior,
-* and application behavior.
+* and whether the real application still works correctly.
+
+If a laptop performs well but a scanner, voice handset, payment terminal, or medical device shows lower SNR, lower data rates, more retries, or poor roaming behavior in the same location, that device may be the better design reference.
 
 The LCMI device is the client that is both important to the business and most difficult to support from an RF perspective.
 
-It is not necessarily the oldest device.  
-It is not necessarily the weakest device.  
+It is not necessarily the oldest device.
+It is not necessarily the weakest device.
 It is the least capable device that still matters.
-
-That distinction is important. A rarely used legacy device may not drive the design. But a barcode scanner, voice handset, payment terminal, medical device, or standard corporate laptop that is used every day might.
-
-In practice, I would document the LCMI device like this:
-
-| Item | Example |
-|---|---|
-| Device type | Barcode scanner |
-| Business role | Warehouse picking |
-| Supported bands | 2.4 GHz / 5 GHz |
-| Wi-Fi standard | 802.11ac |
-| Typical location | Aisles and loading area |
-| Application | Real-time scanning |
-| Minimum usable RSSI/SNR | To be validated |
-| Roaming requirement | Must roam between aisles without session drops |
-| Notes | Smaller antenna than laptop, must be tested in real workflow |
 
 Once the LCMI device is known, AP transmit power should be planned around that device and its application requirements, not only around the best-performing laptop in the building.
 
