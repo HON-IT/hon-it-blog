@@ -244,31 +244,21 @@ This is especially important in environments such as warehouses, healthcare, ret
 
 ## Why Full Power Can Hurt Wi-Fi Design
 
-Running every AP at full power can create several problems.
+Running every AP at full power can make the network look better from a coverage point of view, but it can also make the RF design less predictable.
 
-### Larger Cells
+Higher transmit power increases the apparent cell size of the AP. A client may keep hearing an AP from farther away, even when another AP would provide a better connection. This can delay roaming and create sticky client behavior.
 
-Higher transmit power increases the apparent cell size. Clients may stay connected to an AP from farther away, even when a closer AP would provide a better connection.
+In a multi-AP network, larger cells also mean more overlap. More overlap is not automatically bad, but too much overlap can make AP selection and roaming less predictable. The client may hear several APs at similar signal levels and may not always choose the AP we would prefer.
 
-This can hurt roaming behavior.
+There is also an airtime impact. Wi-Fi is a shared medium. If APs and clients hear each other over a larger area, more devices may need to contend for airtime on the same channel. More transmit power does not create more airtime. In some designs, it can make airtime sharing worse.
 
-### Sticky Clients
-
-Some clients are reluctant to roam. If the AP is very loud, the client may keep hearing it well enough to stay associated, even as the uplink becomes poor.
-
-The client may not roam when we want it to.
-
-### More Co-Channel Contention
-
-Wi-Fi is a shared medium.
-
-If AP cells are too large, more devices may hear each other on the same channel. This can increase contention and reduce airtime efficiency.
-
-More transmit power does not create more airtime. It may actually make airtime sharing worse.
+The problem is not that high transmit power is always wrong. The problem is using high transmit power without considering cell size, roaming behavior, channel reuse, and the capabilities of the client devices.
 
 ### Unbalanced Links
 
-The AP may have a strong downlink to the client, but the client may have a weak uplink back to the AP.
+There is also the bidirectional link problem.
+
+Increasing AP transmit power can improve the downlink from AP to client, but it does not increase the client transmit power. The AP may have a strong downlink to the client, while the client still has a weaker uplink back to the AP.
 
 This can lead to retries, lower rates, and poor application performance.
 
