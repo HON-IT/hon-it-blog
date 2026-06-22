@@ -9,8 +9,6 @@ tags: ["Wi-Fi", "RF", "CWNA", "CWDP", "CWNE", "Transmit Power", "EIRP"]
 categories: ["Wireless Engineering"]
 ---
 
-# Transmit Power Part 1: APs, Clients, EIRP and Why More Power Is Not Always Better
-
 Transmit power is one of those wireless settings that looks simple at first.
 
 More power should mean better Wi-Fi, right?

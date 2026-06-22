@@ -9,8 +9,6 @@ tags: ["Wi-Fi", "RF", "CWNA", "CWDP", "CWNE", "Transmit Power", "Ruckus", "Lab"]
 categories: ["Wireless Engineering"]
 ------------------------------------
 
-# Transmit Power Part 2: Single AP Lab and the Loud AP Problem
-
 This is Part 2 of the transmit power series. In [Part 1](/posts/transmit-power-part-1-theory/), I covered the theory behind AP transmit power, client transmit power, EIRP, and the loud AP problem.
 
 In this part, I wanted to test the theory in a small lab.
