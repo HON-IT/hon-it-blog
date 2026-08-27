@@ -1,10 +1,10 @@
 baseURL = 'https://blog.hon-it.be/'
-languageCode = 'nl-be'
+languageCode = 'en-GB'
 title = 'HON-IT | Wireless Engineering'
-theme = "PaperMod"
+theme = 'PaperMod'
 
 [params]
-    author = " Nick Cuypers"
-    description = "CWNE Candidate - Wireless & Network Engineering Blog"
-    showCodeCopyButtons = true # Handig voor technische lezers!
-	mainSections = ["posts"]
+    author = 'Nick Cuypers'
+    description = 'CWNE Candidate - Wireless & Network Engineering Blog'
+    ShowCodeCopyButtons = true
+    mainSections = ['posts']
