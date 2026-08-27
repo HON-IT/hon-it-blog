@@ -1,49 +1,59 @@
 ---
-
-title: "Transmit Power Part 1: APs, Clients, EIRP and Why More Power Is Not Always Better"
+title: "Wi-Fi Transmit Power Part 1: Why More Is Not Always Better"
 date: 2026-06-22
+lastmod: 2026-08-27
 draft: false
+ShowToc: true
 author: "Nick Cuypers"
-description: "A practical explanation of Wi-Fi transmit power, AP and client power, EIRP, antenna gain, receive sensitivity and the loud AP problem."
+description: "A practical explanation of Wi-Fi transmit power, including dBm, EIRP, antenna gain, receive sensitivity, the LCMI, and the loud AP problem."
 tags: ["Wi-Fi", "RF", "CWNA", "CWDP", "CWNE", "Transmit Power", "EIRP"]
 categories: ["Wireless Engineering"]
 ---
 
-Transmit power is one of those wireless settings that looks simple at first.
+**Updated 27 August 2026:** This article was substantially rewritten as part of my CWNE journey.
 
-More power should mean better Wi-Fi, right?
+Transmit power is one of those wireless settings that looks simple at first. More power should mean better Wi-Fi, right? Not always.
 
-Not always.
+In Wi-Fi, increasing the transmit power of an access point can improve what the client hears from the AP, but that doesn't automatically improve what the AP hears from the client. Wi-Fi is bidirectional, which means both sides of the conversation matter.
 
-In Wi-Fi, increasing the transmit power of an access point can improve what the client hears from the AP. But that does not automatically improve what the AP hears from the client. Wi-Fi is bidirectional. Both sides of the conversation matter.
-
-This post looks at AP transmit power, client transmit power, EIRP, antenna gain, receive sensitivity, and why a "loud AP" can sometimes create more problems than it solves.
+This post looks at AP and client transmit power, EIRP, antenna gain, receive sensitivity, and why a "loud AP" can sometimes create more problems than it solves.
 
 This is part 1 of a small transmit power series:
 
-* **Part 1:** APs, clients, EIRP, and the loud AP problem
+* **Part 1:** Why more power is not always better
 * **Part 2:** Single-AP lab test
 * **Part 3:** Three-AP cell overlap and roaming test
 
-This first post focuses on the theory and design concepts. The lab results will follow in the next parts.
+This first post focuses on the theory and design concepts. The lab results will follow in the next two parts.
 
 ---
 
-## The Basic Problem
+## The Loud AP Problem
 
-When users complain about wireless coverage, it is tempting to increase AP transmit power.
+When users complain about wireless coverage, one of the first things that comes to mind is to increase AP transmit power.
 
 The logic seems reasonable:
 
-> The client has weak signal, so make the AP louder.
+* The client has weak signal, so make the AP louder.
 
-Sometimes that helps. But it only helps in one direction.
+It might look like it helps, but it only improves one direction of the link.
 
-When we increase AP transmit power, we are changing how loudly the AP transmits. That may improve the RSSI seen by the client. The client may show more signal bars. The operating system may report a stronger connection. The user may appear to have better coverage.
+When we increase AP transmit power, we are changing how loudly the AP transmits, which leads to:
 
-But the client did not become louder.
+* Improved RSSI (Received Signal Strength Indicator) on the client side.
+* More signal bars on the client.
+* The operating system shows a better connection.
+* Coverage seems to increase.
 
-The AP still needs to hear the client's transmissions. If the client has lower transmit power, a small antenna, poor radio design, or is located behind attenuation, the uplink can still be weak.
+So, problem solved, right? WRONG!
+
+The problem is that the client did NOT become louder.
+
+Think of the AP as someone speaking through a megaphone and the client as someone in the audience without a microphone. Turning up the megaphone helps the audience hear the speaker, but it does NOT help the speaker hear someone in the audience talking back.
+
+The AP still needs to receive the client's transmissions.
+
+If the client transmits at lower power, has a small antenna or poor radio design, or is located behind an obstacle, the uplink can still be weak.
 
 This is the classic loud AP problem.
 
@@ -55,73 +65,63 @@ Wi-Fi is not a one-way technology where the AP simply talks and the clients list
 
 A working Wi-Fi connection requires communication in both directions:
 
-* The client must hear the AP.
-* The AP must hear the client.
+* The client must hear the AP (downlink).
+* The AP must hear the client (uplink).
 
 This applies to management frames, control frames, and data frames. Association, authentication, roaming, acknowledgements, retries, rate selection, and application traffic all depend on two-way communication.
 
-If only the downlink is strong, the client may believe it has good coverage while the AP struggles to receive frames from that client.
+If only the downlink is strong, the client may believe it has good coverage, while the AP struggles to receive frames successfully from that client.
 
 That can result in:
 
-* Higher retries
-* Lower data rates
-* Poor roaming behavior
-* Unstable voice or video calls
-* Slow application performance
-* Clients staying associated too long
-* Inconsistent user experience
+* Higher retries.
+* Lower data rates.
+* Poor roaming behaviour.
+* Unstable voice or video calls.
+* Slow application performance.
+* Clients staying associated too long.
+* Inconsistent user experience.
 
-A strong signal indicator on the client does not always mean the link is healthy in both directions.
-
----
-
-## AP Transmit Power vs Client Transmit Power
-
-An access point and a client device usually do not transmit at the same power level.
-
-Enterprise APs may support relatively high transmit power, depending on the band, channel, regulatory domain, antenna type, and platform. Client devices are often more limited.
-
-A laptop may perform well. A modern phone may perform well. But a small handheld scanner, voice handset, payment terminal, medical device, or IoT sensor may have a smaller antenna and lower transmit capability.
-
-This is one reason wireless design cannot be based only on the best client in the environment.
-
-A design that works for a high-end laptop may not work well for a business-critical handheld device.
+A strong signal indicator on the client does not always mean the link is healthy in both directions. It only shows how well the client hears the AP, not how well the AP hears the client.
 
 ---
 
-## The Loud AP Problem
+## AP vs Client Transmit Power
 
-The loud AP problem happens when the AP transmits at a much higher effective power than the client.
+Out of the box, an AP and a client usually do not transmit at the same power.
 
-The client hears the AP clearly, but the AP does not hear the client as well.
+Many APs start at their highest allowed transmit power when they first boot. In an enterprise network, this can later be adjusted manually or automatically by transmit power control. The maximum power available to the AP depends on:
 
-From the client side, things may look fine:
+* The regulatory domain.
+* The band and channel.
+* The AP model and radio capabilities.
+* The antenna type and gain.
 
-* RSSI looks acceptable.
-* The SSID is visible.
-* The client can associate.
-* The client may show good signal bars.
+Client devices follow many of the same regulatory limitations, but they also have something an AP normally does not have to worry about: battery life.
 
-From the AP side, the situation may be different:
+The actual transmit power and power-saving behaviour are controlled by the client's hardware, firmware, drivers, and operating system. This means the behaviour can differ between client types and can even change depending on the device state and wireless conditions:
 
-* AP-reported client RSSI may be weak.
-* Retries may increase.
-* The client may use lower data rates.
-* Roaming may become less predictable.
-* Uplink-sensitive applications may suffer.
+* Laptops usually have more room for multiple antennas, better antenna separation, and a larger battery. They can still use power-saving features, but generally have fewer physical and energy constraints than smaller clients.
+* Mobile phones have less room for antenna placement and a smaller battery. They use Wi-Fi power-saving mechanisms to reduce energy consumption, and their Wi-Fi behaviour can change when power-saving modes are active.
+* Smaller devices, such as handheld scanners, voice handsets, payment terminals, and IoT sensors, are often designed for long battery life. They may use older radios, fewer spatial streams, a more constrained antenna design, lower transmit power, and more aggressive power-saving behaviour.
 
-This is why "more power" is not always better. It can create an unbalanced cell where the downlink looks better than the uplink.
+Power saving does not always mean that a client simply transmits at a lower dBm value. It can also mean sleeping longer, scanning less often, or keeping the radio active for a shorter period. The exact behaviour is decided by the client.
+
+These are general examples, NOT fixed rules. A modern scanner may perform better than an old laptop. The only way to know is to check the specifications and test the actual device.
+
+This is why a wireless design cannot be based only on the best client in the environment. We need to identify the LCMI: the Least Capable, Most Important client the network still needs to support. We will look at how to identify the LCMI later in this post.
 
 ---
 
 ## Understanding dBm
 
-Transmit power and received signal strength are commonly expressed in dBm.
+To properly compare AP and client transmit power, we first need to understand dBm.
 
-dBm is an absolute power level referenced to 1 milliwatt.
+dBm is an absolute power measurement referenced to 1 milliwatt. It is commonly used to show transmit power and received signal strength, which is often displayed as RSSI.
 
-A few useful reference points:
+In this case, RSSI shows how strongly the client receives the AP. The AP measures the client's signal separately, so the client-side RSSI does NOT show how strongly the AP receives the client.
+
+A few useful reference points are:
 
 |  Power | Meaning       |
 | -----: | ------------- |
@@ -130,25 +130,40 @@ A few useful reference points:
 | 20 dBm | 100 mW        |
 | 30 dBm | 1000 mW / 1 W |
 
-A 3 dB increase is approximately double the power.
-A 3 dB decrease is approximately half the power.
-A 10 dB increase is ten times the power.
+Transmit power is usually shown as a positive value, while RSSI is normally shown as a negative value. With negative values, a number closer to zero represents a stronger signal:
 
-However, RF design is not only about raw transmit power. Antennas, cable loss, path loss, wall attenuation, noise floor, receive sensitivity, and client behavior all matter.
+* -50 dBm is stronger than -60 dBm.
+* -60 dBm is stronger than -70 dBm.
+
+The important thing to understand is that dBm uses a logarithmic scale. The difference between 17 dBm and 20 dBm may look small, but 20 dBm is approximately twice the transmit power of 17 dBm.
+
+This is where the difference between dB and dBm becomes important:
+
+* dBm represents an absolute power level.
+* dB represents a relative change between two power levels.
+
+Some useful rules to remember are:
+
+* An increase of 3 dB approximately doubles the power.
+* A decrease of 3 dB approximately halves the power.
+* An increase of 10 dB multiplies the power by ten.
+* A decrease of 10 dB reduces the power to one tenth.
+
+For example, lowering an AP from 20 dBm to 17 dBm cuts its transmit power approximately in half. Lowering it further to 14 dBm cuts it in half again, leaving approximately one quarter of the original transmit power.
 
 ---
 
 ## What Is EIRP?
 
-EIRP stands for Equivalent Isotropically Radiated Power.
+The transmit power configured on an AP does not always tell the complete story.
 
-In simple terms, EIRP is the effective radiated power after considering transmitter output power, antenna gain, and cable loss.
+The radio provides the transmit power, but the antenna adds gain and any cables or connectors introduce loss. EIRP combines these values and represents the effective power radiated by the antenna.
+
+EIRP stands for Equivalent Isotropically Radiated Power.
 
 A simplified formula is:
 
-```text
-EIRP = Transmit Power + Antenna Gain - Cable Loss
-```
+> EIRP = Transmit Power + Antenna Gain - Cable Loss
 
 For example:
 
@@ -159,164 +174,152 @@ For example:
 = 24 dBm EIRP
 ```
 
-This matters because regulatory limits are usually based on EIRP, not only the configured transmit power of the radio.
+In this example, the radio transmits at 20 dBm, but the resulting EIRP is 24 dBm after adding the antenna gain and subtracting the cable loss.
 
-If an AP uses external antennas, antenna gain and cable loss must be included. With internal antenna APs, vendors often abstract some of this away, but the concept still matters.
+This matters because regulatory limits are often based on EIRP, not only on the configured transmit power of the radio. Adding a higher-gain antenna can therefore require the transmit power to be lowered to remain within the allowed limit.
 
-The important point is this:
+One important detail is that vendors do not always display transmit power in the same way. The value shown in a controller may represent the radio transmit power, or the vendor may already account for antenna gain. Always verify what the displayed value represents before calculating EIRP yourself.
 
-> The configured transmit power is not always the same thing as the effective radiated power.
+The important point is that configured radio transmit power and EIRP are NOT automatically the same.
 
 ---
 
 ## Antenna Gain Does Not Create Free Power
 
-Antenna gain can be misunderstood.
+In the EIRP formula, antenna gain is added to the transmit power. This can make it look like the antenna creates additional power, but it does NOT.
 
-An antenna does not magically create extra RF energy. Instead, antenna gain changes how energy is focused in space.
+The easiest way to explain antenna gain is by using a flashlight. The light can be spread across a wide area or focused into a narrow beam. The focused beam appears brighter and reaches farther, but the flashlight itself does not produce more power. A passive antenna does the same thing with RF energy by changing the shape of the radiation pattern.
 
-A higher-gain antenna focuses energy more in some directions and less in others. This can be useful, but it also changes the coverage pattern.
+Antenna gain is expressed in dBi and compared with an isotropic antenna, which is a theoretical antenna that radiates equally in every direction. An antenna with 5 dBi gain provides 5 dB more signal in its strongest direction than an isotropic antenna using the same transmit power. It does NOT provide 5 dB more signal in every direction.
 
-For example:
+Different antenna types create different radiation patterns:
 
-* An omnidirectional antenna spreads energy around a wider area.
-* A directional antenna focuses energy in a specific direction.
-* A high-gain antenna may reduce coverage in some areas while improving it in others.
+* An omnidirectional antenna typically creates a doughnut-shaped pattern around the antenna. A higher-gain omnidirectional antenna usually creates a flatter pattern, extending the signal farther horizontally while providing less coverage above and below the antenna.
+* A directional antenna focuses the signal towards a specific area while providing less coverage towards the sides and behind the antenna.
 
-This is one reason antenna selection matters. It is not only about making the signal "stronger". It is about putting RF energy where it is needed.
+This makes antenna type, orientation, and mounting position important parts of the wireless design. The best antenna is not automatically the one with the highest gain, but the one with a radiation pattern that matches the required coverage area.
 
 ---
 
 ## Receive Sensitivity Also Matters
 
-Transmit power is only one side of the link budget.
+Transmit power determines how loudly a device speaks. Receive sensitivity determines how quietly the other device can speak before it can no longer be understood.
 
-Receive sensitivity describes how weak a signal can be while still being successfully received and decoded by a radio.
+Receive sensitivity is the weakest signal level that a radio can reliably demodulate and decode. It is normally expressed in dBm. When comparing the same conditions, a receive sensitivity of -90 dBm is better than -75 dBm because the radio can decode a weaker signal.
 
-Different data rates and modulation types require different signal quality. Higher data rates generally require better signal-to-noise ratio.
+RSSI shows the signal level that is actually received, while receive sensitivity is the minimum level required to decode it. If the RSSI drops below the required receive sensitivity, the radio can no longer use that data rate reliably.
 
-This means a client may still "hear" the AP, but not well enough to use higher rates reliably.
+Receive sensitivity is not one fixed value. Manufacturers specify different values depending on the channel width and MCS. MCS stands for Modulation and Coding Scheme and determines how data is encoded and transmitted. A lower MCS is slower but can be decoded at a weaker signal level. A higher MCS provides more speed but requires a stronger and cleaner signal.
 
-The same applies in the other direction. The AP may hear the client, but if the signal is weak or noisy, the AP may receive frames at lower rates or with more retries.
+This is also why RSSI does NOT tell the complete story. SNR stands for Signal-to-Noise Ratio and shows the difference between the received signal and the noise floor.
 
-Good Wi-Fi design is about the complete RF link, not only the AP transmit power setting.
+For example:
 
----
+* An RSSI of -60 dBm with a noise floor of -65 dBm results in only 5 dB SNR.
+* An RSSI of -70 dBm with a noise floor of -95 dBm results in 25 dB SNR.
 
-## Matching AP Power to Client Capabilities
+The second signal has a weaker RSSI but provides a much cleaner signal for the receiver to decode.
 
-When planning AP transmit power, we should think about the clients that actually matter in the environment.
-
-A useful way to approach this is the LCMI principle.
-
-LCMI stands for **Least Capable, Most Important** device.
-
-The idea is to design not only for the best client in the environment, but for the least capable client that is still important to the business.
-
-A modern laptop may perform well, but a barcode scanner, voice handset, payment terminal, IoT device, older client, or medical device may struggle in the same location.
-
-When planning transmit power, the question should not only be:
-
-> Can my best client hear the AP?
-
-The better question is:
-
-> Can my least capable, most important client hear the AP, and can the AP hear that client back?
-
-The correct transmit power depends on many factors, including:
-
-* The LCMI device
-* Client transmit power
-* Client antenna design
-* Supported bands and channels
-* Required applications
-* AP density
-* Channel plan
-* Wall attenuation
-* Roaming requirements
-* Regulatory domain
-* Antenna type
-* Minimum data rates
-
-This is especially important in environments such as warehouses, healthcare, retail, manufacturing, and logistics, where the most business-critical device may not be the most capable Wi-Fi client.
+Both the AP and the client have their own receive sensitivity. One side may be able to decode a weak signal that the other side cannot. A usable Wi-Fi connection therefore depends on both devices being able to receive and decode each other at the data rate required by the application.
 
 ---
 
-## How Do You Identify the LCMI Device?
+## How Do You Identify the LCMI?
 
-The LCMI device is not always obvious from a datasheet.
+Identifying the LCMI starts with understanding which client devices the business actually depends on.
 
-A good starting point is to list the client types that actually matter to the business. In an office this may be a standard corporate laptop or phone. In a warehouse it may be a barcode scanner. In retail it may be a payment terminal. In healthcare it may be a medical device or voice handset.
+A device may have limited Wi-Fi capabilities, but if it is rarely used or not important to the business, it should not automatically influence the entire wireless design. Start by listing the important devices and the workflows that depend on them.
 
-After that, the question becomes:
+Once the important devices have been identified, we can compare their wireless capabilities:
 
-> Which important client is the least capable from a Wi-Fi point of view?
+| Check | Why it matters |
+| ----- | -------------- |
+| Supported bands | A 2.4 GHz-only device has different design requirements than a client that supports 5 GHz or 6 GHz. |
+| Supported channels and channel widths | Some clients do not support every channel in a band, and client behaviour on DFS channels can vary. Supported channel widths can also differ by client and band. |
+| Radio capabilities | The supported Wi-Fi generation, MCS values, and number of spatial streams affect performance. |
+| Antenna design | Small handheld and embedded devices often have more constrained antenna designs than laptops. |
+| Client transmit power | A client with lower transmit power may hear the AP while the AP struggles to hear the client. |
+| Roaming behaviour | Some clients roam quickly, while others remain connected to an AP for too long. |
+| Application requirements | Voice, scanning, payment, and medical applications may be more sensitive to packet loss, latency, or interruptions than normal web browsing. |
 
-To answer that, look at a few things:
-
-| Check                    | Why it matters                                                                                    |
-| ------------------------ | ------------------------------------------------------------------------------------------------- |
-| Supported bands          | A 2.4 GHz-only device has very different design constraints than a 5 GHz or 6 GHz capable client. |
-| Supported standards      | An older 802.11n client may behave very differently from a modern 802.11ax client.                |
-| Antenna design           | Small handheld or embedded devices often have weaker antennas than laptops.                       |
-| Client transmit power    | A low-power client may hear the AP but may not be heard well by the AP.                           |
-| Roaming behavior         | Some clients roam aggressively, while others stay connected too long.                             |
-| Application requirements | Voice, scanning, payment, and medical workflows may be more sensitive than basic web browsing.    |
-
-The best way to identify the LCMI device is to test real clients in real locations.
-
-A simple practical method is to place each candidate device in the same test locations and record the same values for each one. For example, you could test a laptop, phone, scanner, or other business-critical device at a few repeatable distances from the AP, such as close range, mid-cell, and the expected cell edge.
-
-The exact distances are not the most important part. Testing at 3, 6, and 9 meters can be useful in a lab, but real environments are affected by walls, shelving, people, doors, device orientation, and antenna placement. The goal is repeatability.
+Specifications are a useful starting point, but they do not always show how a device will perform in the actual environment. The best way to identify the LCMI is to test the candidate devices under the same conditions, especially near the expected cell edge.
 
 For each device, compare:
 
-* client-side RSSI,
-* AP/controller-side client RSSI,
-* SNR,
-* Tx/Rx rate or MCS,
-* retry rate if available,
-* roaming behavior,
-* and whether the real application still works correctly.
+* Client-side RSSI and SNR.
+* Client RSSI measured by the AP.
+* Tx and Rx data rates or MCS values.
+* Retry rate, if available.
+* Roaming behaviour.
+* Whether the actual application continues to work reliably.
 
-If a laptop performs well but a scanner, voice handset, payment terminal, or medical device shows lower SNR, lower data rates, more retries, or poor roaming behavior in the same location, that device may be the better design reference.
-
-The LCMI device is the client that is both important to the business and most difficult to support from an RF perspective.
-
-It is not necessarily the oldest device.
-It is not necessarily the weakest device.
-It is the least capable device that still matters.
-
-Once the LCMI device is known, AP transmit power should be planned around that device and its application requirements, not only around the best-performing laptop in the building.
+Client-side and AP-side RSSI are measured by different radios, so the values should not be expected to match exactly. The important client that reaches its acceptable performance limit first is the LCMI.
 
 ---
 
-## Why Full Power Can Hurt Wi-Fi Design
+## Matching AP Transmit Power to the LCMI
 
-Running every AP at full power can make the network look better from a coverage point of view, but it can also make the RF design less predictable.
+Once the LCMI has been identified, its transmit power can be used as a starting point for selecting the AP transmit power.
 
-Higher transmit power increases the apparent cell size of the AP. A client may keep hearing an AP from farther away, even when another AP would provide a better connection. This can delay roaming and create sticky client behavior.
+For example, imagine that the LCMI is a barcode scanner that transmits at 14 dBm while the AP transmits at 20 dBm.
 
-In a multi-AP network, larger cells also mean more overlap. More overlap is not automatically bad, but too much overlap can make AP selection and roaming less predictable. The client may hear several APs at similar signal levels and may not always choose the AP we would prefer.
+The difference is:
 
-There is also an airtime impact. Wi-Fi is a shared medium. If APs and clients hear each other over a larger area, more devices may need to contend for airtime on the same channel. More transmit power does not create more airtime. In some designs, it can make airtime sharing worse.
+> 20 dBm - 14 dBm = 6 dB
 
-The problem is not that high transmit power is always wrong. The problem is using high transmit power without considering cell size, roaming behavior, channel reuse, and the capabilities of the client devices.
+Assuming the other parts of the link budget remain equal, the client may receive the AP approximately 6 dB stronger than the AP receives the client. Because a difference of 3 dB represents approximately twice the power, 6 dB represents approximately four times the power.
 
-### Unbalanced Links
+A simple starting point is therefore:
 
-There is also the bidirectional link problem.
+> AP transmit power ≈ LCMI transmit power
 
-Increasing AP transmit power can improve the downlink from AP to client, but it does not increase the client transmit power. The AP may have a strong downlink to the client, while the client still has a weaker uplink back to the AP.
+In this example, lowering the AP transmit power from 20 dBm to around 14 dBm would create a more balanced starting point for the link.
 
-This can lead to retries, lower rates, and poor application performance.
+This does NOT make the client transmit more strongly or improve the uplink by itself. It reduces the area in which the AP appears usable to the client. In a multi-AP network, this can help prevent the downlink cell from extending much farther than the usable uplink and encourage clients to move to a closer AP sooner.
+
+The values should not be copied blindly. Before selecting the AP transmit power, also consider:
+
+* Whether the AP displays radio transmit power or EIRP.
+* AP and client antenna characteristics.
+* AP and client receive sensitivity.
+* The band and channel being used.
+* Regulatory and EIRP limits.
+* The required RSSI, SNR, and data rates.
+* AP placement and density.
+* Application and roaming requirements.
+
+The final transmit power should be validated near the intended cell edge. The client must still hear the AP with sufficient RSSI and SNR, the AP must still receive the client reliably, and the actual application must continue to work.
+
+The goal is not to make both sides report identical RSSI values. The goal is to prevent the AP downlink from extending much farther than the client uplink.
+
+---
+
+## So, Is More Transmit Power Better?
+
+Sometimes, but not automatically.
+
+Increasing AP transmit power can improve what the client hears and extend the apparent coverage area. It does NOT strengthen the client's return path or guarantee that the application will work better.
+
+In a single-AP environment, higher transmit power may be useful if the client can still communicate reliably in both directions. In a multi-AP environment, however, higher transmit power also increases the apparent cell size of each AP.
+
+The client can continue to hear an AP from farther away and may remain connected even when another AP would provide a better connection. Because the client ultimately decides when and where to roam, a larger cell can delay that decision.
+
+Larger cells also create more overlap. Some overlap is required for roaming, but too much overlap can make cell boundaries less clear. A client may hear several APs at similar signal levels and may not always select the AP we would prefer.
+
+There can also be an airtime impact. Wi-Fi is a shared medium. When APs and clients using the same channel can hear each other across a larger area, they may need to wait for each other before transmitting. This increases the size of the contention domain and reduces channel reuse.
+
+More transmit power does NOT create more airtime. In some designs, it causes the available airtime to be shared by more devices over a larger area.
+
+This does not mean that full transmit power is always wrong. It may be appropriate for a specific environment, AP placement, or coverage requirement.
+
+The correct transmit power is the level that allows the AP and the LCMI to communicate reliably in both directions while creating the appropriate cell size for the design. That may be full power, but it often is not.
 
 ---
 
 ## What Comes Next
 
-This post covered the theory behind Wi-Fi transmit power, EIRP, AP/client power differences, and the loud AP problem.
+This post covered the theory behind AP and client transmit power, dBm, EIRP, antenna gain, receive sensitivity, and designing around the LCMI.
 
-In **Part 2**, I will test this in the lab with a single AP. The goal is to see whether increasing AP transmit power improves both sides of the link, or only what the client hears from the AP.
+In **Part 2**, I will repeat the single-AP lab with different AP transmit power levels. I will compare what the client hears from the AP with what the AP hears from the client to see how changing AP transmit power affects both sides of the link.
 
-In **Part 3**, I will use three lab APs to look at cell overlap, roaming behavior, and why too much transmit power can become a design problem in multi-AP environments.
+In **Part 3**, I will use three APs to look at cell size, overlap, roaming behaviour, and the effect of transmit power in a multi-AP environment.
