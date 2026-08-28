@@ -1,5 +1,5 @@
 ---
-title: "Wi-Fi Transmit Power Part 1: Why More Is Not Always Better"
+title: "Wi-Fi transmit power part 1: Why more is not always better"
 date: 2026-06-22
 lastmod: 2026-08-27
 draft: false
@@ -28,7 +28,7 @@ This first post focuses on the theory and design concepts. The lab results will 
 
 ---
 
-## The Loud AP Problem
+## The loud AP problem
 
 When users complain about wireless coverage, one of the first things that comes to mind is to increase AP transmit power.
 
@@ -59,7 +59,7 @@ This is the classic loud AP problem.
 
 ---
 
-## Wi-Fi Is Bidirectional
+## Wi-Fi is bidirectional
 
 Wi-Fi is not a one-way technology where the AP simply talks and the clients listen.
 
@@ -86,7 +86,7 @@ A strong signal indicator on the client does not always mean the link is healthy
 
 ---
 
-## AP vs Client Transmit Power
+## AP vs client transmit power
 
 Out of the box, an AP and a client usually do not transmit at the same power.
 
@@ -153,7 +153,7 @@ For example, lowering an AP from 20 dBm to 17 dBm cuts its transmit power approx
 
 ---
 
-## What Is EIRP?
+## What is EIRP?
 
 The transmit power configured on an AP does not always tell the complete story.
 
@@ -178,13 +178,17 @@ In this example, the radio transmits at 20 dBm, but the resulting EIRP is 24 dBm
 
 This matters because regulatory limits are often based on EIRP, not only on the configured transmit power of the radio. Adding a higher-gain antenna can therefore require the transmit power to be lowered to remain within the allowed limit.
 
+One additional detail applies in 6 GHz, where power limits may also be expressed as Power Spectral Density (PSD) in dBm/MHz. This creates a relationship between channel width and the maximum permitted EIRP, but the result depends on the regulatory domain.
+
+Under FCC rules, each doubling of the channel width can permit 3 dB more total EIRP, up to the maximum allowed value. Under the ETSI rules used in Belgium, a 20 MHz channel already reaches the maximum EIRP of 23 dBm for Low Power Indoor (LPI) operation. Wider channels therefore do NOT permit a higher total EIRP in this regulatory domain.
+
 One important detail is that vendors do not always display transmit power in the same way. The value shown in a controller may represent the radio transmit power, or the vendor may already account for antenna gain. Always verify what the displayed value represents before calculating EIRP yourself.
 
 The important point is that configured radio transmit power and EIRP are NOT automatically the same.
 
 ---
 
-## Antenna Gain Does Not Create Free Power
+## Antenna gain does not create free power
 
 In the EIRP formula, antenna gain is added to the transmit power. This can make it look like the antenna creates additional power, but it does NOT.
 
@@ -201,7 +205,7 @@ This makes antenna type, orientation, and mounting position important parts of t
 
 ---
 
-## Receive Sensitivity Also Matters
+## Receive sensitivity also matters
 
 Transmit power determines how loudly a device speaks. Receive sensitivity determines how quietly the other device can speak before it can no longer be understood.
 
@@ -224,7 +228,7 @@ Both the AP and the client have their own receive sensitivity. One side may be a
 
 ---
 
-## How Do You Identify the LCMI?
+## How do you identify the LCMI?
 
 Identifying the LCMI starts with understanding which client devices the business actually depends on.
 
@@ -257,7 +261,7 @@ Client-side and AP-side RSSI are measured by different radios, so the values sho
 
 ---
 
-## Matching AP Transmit Power to the LCMI
+## Matching AP transmit power to the LCMI
 
 Once the LCMI has been identified, its transmit power can be used as a starting point for selecting the AP transmit power.
 
@@ -294,7 +298,7 @@ The goal is not to make both sides report identical RSSI values. The goal is to 
 
 ---
 
-## So, Is More Transmit Power Better?
+## So, is more transmit power better?
 
 Sometimes, but not automatically.
 
@@ -316,7 +320,7 @@ The correct transmit power is the level that allows the AP and the LCMI to commu
 
 ---
 
-## What Comes Next
+## What comes next
 
 This post covered the theory behind AP and client transmit power, dBm, EIRP, antenna gain, receive sensitivity, and designing around the LCMI.
 
